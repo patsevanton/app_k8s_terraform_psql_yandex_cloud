@@ -1,2 +1,2 @@
-# app_k8s_terraform_psql_yandex_cloud
-app in kubernetes terraform postgresql yandex cloud
+# Установка Managed Service for PostgreSQL и Managed Service for Kubernetes в Yandex Cloud c помощью terraform
+# Развертывание приложения в Managed Service for Kubernetes в Yandex Cloud 
