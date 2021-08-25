@@ -15,11 +15,6 @@ variable "yc_folder_id" {
   description = "Yandex Cloud folder id"
 }
 
-variable "user" {
-  type = string
-  description = "$USER"
-}
-
 # Provider
 
 terraform {
