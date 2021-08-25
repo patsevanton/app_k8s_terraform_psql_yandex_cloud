@@ -1,5 +1,9 @@
 !.gitignore
-/terraform/private.auto.tfvars
-/terraform/.terraform
-/terraform/*.tfstate
-/terraform/*.tfstate.*
+/terraform-k8s/private.auto.tfvars
+/terraform-k8s/.terraform
+/terraform-k8s/*.tfstate
+/terraform-k8s/*.tfstate.*
+/terraform-mdb-postgresql/private.auto.tfvars
+/terraform-mdb-postgresql/.terraform
+/terraform-mdb-postgresql/*.tfstate
+/terraform-mdb-postgresql/*.tfstate.*

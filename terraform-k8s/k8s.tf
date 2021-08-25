@@ -1,6 +1,6 @@
 resource "yandex_kubernetes_cluster" "zonal_cluster_resource_name" {
-  name        = "MyCluster"
-  description = "MyCluster description"
+  name        = "my-cluster"
+  description = "my-cluster description"
   network_id = "${yandex_vpc_network.this.id}"
 
   master {
@@ -22,6 +22,7 @@ resource "yandex_vpc_network" "this" {}
 
 resource "yandex_vpc_subnet" "subnet_resource_name" {
   network_id     = yandex_vpc_network.this.id
+  zone = "ru-central1-a"
   v4_cidr_blocks = ["192.168.20.0/24"]
 }
 
