@@ -1,0 +1,5 @@
+!.gitignore
+/terraform/private.auto.tfvars
+/terraform/.terraform
+/terraform/*.tfstate
+/terraform/*.tfstate.*
