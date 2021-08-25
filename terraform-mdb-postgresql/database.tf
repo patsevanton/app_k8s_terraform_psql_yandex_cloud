@@ -57,3 +57,33 @@ resource "yandex_vpc_subnet" "postgresql-single" {
   network_id     = yandex_vpc_network.postgresql-single.id
   v4_cidr_blocks = ["10.5.0.0/24"]
 }
+
+locals {
+  dbuser = tolist(yandex_mdb_postgresql_cluster.postgresql-single.user.*.name)[0]
+  dbpassword = tolist(yandex_mdb_postgresql_cluster.postgresql-single.user.*.password)[0]
+  dbhosts = yandex_mdb_postgresql_cluster.postgresql-single.host.*.fqdn
+  dbname = tolist(yandex_mdb_postgresql_cluster.postgresql-single.database.*.name)[0]
+  dburi = "postgresql://${local.dbuser}:${local.dbpassword}@:1/${local.dbname}"
+}
+
+output "dbuser" {
+  value = "${local.dbuser}"
+}
+
+output "dbpassword" {
+  value = "${local.dbpassword}"
+  sensitive = true
+}
+
+output "dbhosts" {
+  value = "${local.dbhosts}"
+}
+
+output "dbname" {
+  value = "${local.dbname}"
+}
+
+output "dburi" {
+  value = "${local.dburi}"
+  sensitive = true
+}

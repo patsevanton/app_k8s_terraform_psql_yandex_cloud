@@ -62,6 +62,7 @@ users:
       - create-token
 KUBECONFIG
 }
+
 output "kubeconfig" {
   value = "${local.kubeconfig}"
 }
