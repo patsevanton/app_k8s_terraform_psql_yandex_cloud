@@ -17,7 +17,7 @@ resource "yandex_resourcemanager_folder_iam_binding" "editor" {
 resource "yandex_compute_instance_group" "vm-in-net-psql" {
   name               = "vm-in-net-psql"
   folder_id          = var.yc_folder_id
-  service_account_id = "${yandex_iam_service_account.ig-sa.id}"
+  service_account_id = yandex_iam_service_account.ig-sa.id
 
   depends_on = [
     yandex_iam_service_account.ig-sa,
@@ -46,8 +46,10 @@ resource "yandex_compute_instance_group" "vm-in-net-psql" {
     }
 
     network_interface {
-      network_id = "${yandex_vpc_network.vpc-psql.id}"
-      subnet_ids = ["${yandex_vpc_subnet.subnet-psql.id}"]
+      network_id = yandex_vpc_network.vpc-psql.id
+      subnet_ids = [yandex_vpc_subnet.subnet-psql.id]
+      # Флаг nat true указывает что виртуалкам будет предоставлен публичный IP адрес.
+      nat = true
     }
 
     metadata = {

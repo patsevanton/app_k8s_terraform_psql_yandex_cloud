@@ -17,7 +17,7 @@ resource "yandex_resourcemanager_folder_iam_binding" "single-vm" {
 resource "yandex_compute_instance_group" "vm-not-in-net-psql" {
   name               = "vm-not-in-net-psql"
   folder_id          = var.yc_folder_id
-  service_account_id = "${yandex_iam_service_account.single-vm.id}"
+  service_account_id = yandex_iam_service_account.single-vm.id
 
   depends_on = [
     yandex_iam_service_account.single-vm,
@@ -46,8 +46,10 @@ resource "yandex_compute_instance_group" "vm-not-in-net-psql" {
     }
 
     network_interface {
-      network_id = "${yandex_vpc_network.network-1.id}"
-      subnet_ids = ["${yandex_vpc_subnet.subnet-1.id}"]
+      network_id = yandex_vpc_network.network-1.id
+      subnet_ids = [yandex_vpc_subnet.subnet-1.id]
+      # Флаг nat true указывает что виртуалкам будет предоставлен публичный IP адрес.
+      nat = true
     }
 
     metadata = {
@@ -83,7 +85,7 @@ resource "yandex_vpc_network" "network-1" {
 resource "yandex_vpc_subnet" "subnet-1" {
   name           = "subnet1"
   zone           = "ru-central1-c"
-  network_id     = "${yandex_vpc_network.network-1.id}"
+  network_id     = yandex_vpc_network.network-1.id
   v4_cidr_blocks = ["192.168.10.0/24"]
 
   depends_on = [
