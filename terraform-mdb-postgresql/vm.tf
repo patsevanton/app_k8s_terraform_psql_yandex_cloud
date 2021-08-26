@@ -9,12 +9,23 @@ resource "yandex_resourcemanager_folder_iam_binding" "editor" {
   members     = [
     "serviceAccount:${yandex_iam_service_account.ig-sa.id}",
   ]
+  depends_on = [
+    yandex_iam_service_account.ig-sa,
+  ]
 }
 
 resource "yandex_compute_instance_group" "group1" {
   name               = "test-ig"
   folder_id          = var.yc_folder_id
   service_account_id = "${yandex_iam_service_account.ig-sa.id}"
+
+  depends_on = [
+    yandex_iam_service_account.ig-sa,
+    yandex_resourcemanager_folder_iam_binding.editor,
+    yandex_vpc_network.network-1,
+    yandex_vpc_subnet.subnet-1,
+  ]
+
   instance_template {
     platform_id = "standard-v1"
     resources {
@@ -70,4 +81,9 @@ resource "yandex_vpc_subnet" "subnet-1" {
   zone           = "ru-central1-c"
   network_id     = "${yandex_vpc_network.network-1.id}"
   v4_cidr_blocks = ["192.168.10.0/24"]
+
+  depends_on = [
+    yandex_vpc_network.network-1,
+  ]
+
 }
