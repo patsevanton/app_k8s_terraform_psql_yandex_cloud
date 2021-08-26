@@ -16,10 +16,10 @@ resource "yandex_resourcemanager_folder_iam_binding" "editor" {
 }
 
 resource "yandex_vpc_network" "this" {
-  name = "this"
+  name = "vpc_network_k8s"
 }
 
-resource "yandex_vpc_subnet" "subnet_resource_name" {
+resource "yandex_vpc_subnet" "this" {
   network_id     = yandex_vpc_network.this.id
   zone = "ru-central1-c"
   v4_cidr_blocks = ["192.168.20.0/24"]
@@ -27,7 +27,7 @@ resource "yandex_vpc_subnet" "subnet_resource_name" {
 
 # yandex_kubernetes_cluster
 
-resource "yandex_kubernetes_cluster" "zonal_cluster_resource_name" {
+resource "yandex_kubernetes_cluster" "zonal_k8s_cluster" {
   name        = "my-cluster"
   description = "my-cluster description"
   network_id = yandex_vpc_network.this.id
@@ -35,8 +35,8 @@ resource "yandex_kubernetes_cluster" "zonal_cluster_resource_name" {
   master {
     version = "1.18"
     zonal {
-      zone      = yandex_vpc_subnet.subnet_resource_name.zone
-      subnet_id = yandex_vpc_subnet.subnet_resource_name.id
+      zone      = yandex_vpc_subnet.this.zone
+      subnet_id = yandex_vpc_subnet.this.id
     }
     public_ip = true
   }
@@ -49,8 +49,8 @@ resource "yandex_kubernetes_cluster" "zonal_cluster_resource_name" {
 
 # yandex_kubernetes_node_group
 
-resource "yandex_kubernetes_node_group" "my_node_group" {
-  cluster_id  = yandex_kubernetes_cluster.zonal_cluster_resource_name.id
+resource "yandex_kubernetes_node_group" "k8s_node_group" {
+  cluster_id  = yandex_kubernetes_cluster.zonal_k8s_cluster.id
   name        = "name"
   description = "description"
   version     = "1.18"
@@ -64,7 +64,7 @@ resource "yandex_kubernetes_node_group" "my_node_group" {
 
     network_interface {
       nat                = true
-      subnet_ids         = [yandex_vpc_subnet.subnet_resource_name.id]
+      subnet_ids         = [yandex_vpc_subnet.this.id]
     }
 
     resources {
@@ -119,8 +119,8 @@ locals {
 apiVersion: v1
 clusters:
 - cluster:
-    server: ${yandex_kubernetes_cluster.zonal_cluster_resource_name.master[0].external_v4_endpoint}
-    certificate-authority-data: ${base64encode(yandex_kubernetes_cluster.zonal_cluster_resource_name.master[0].cluster_ca_certificate)}
+    server: ${yandex_kubernetes_cluster.zonal_k8s_cluster.master[0].external_v4_endpoint}
+    certificate-authority-data: ${base64encode(yandex_kubernetes_cluster.zonal_k8s_cluster.master[0].cluster_ca_certificate)}
   name: kubernetes
 contexts:
 - context:
