@@ -25,21 +25,6 @@ resource "yandex_vpc_subnet" "subnet_resource_name" {
   v4_cidr_blocks = ["192.168.20.0/24"]
 }
 
-resource "yandex_vpc_security_group" "my_sg" {
-  name           = "My security group"
-  description    = "description for my security group"
-  network_id     = yandex_vpc_network.this.id
-
-  depends_on = [
-    yandex_iam_service_account.this,
-    yandex_resourcemanager_folder_iam_binding.editor,
-    yandex_vpc_network.this,
-    yandex_vpc_subnet.subnet_resource_name,
-  ]
-}
-
-
-
 # yandex_kubernetes_cluster
 
 resource "yandex_kubernetes_cluster" "zonal_cluster_resource_name" {
@@ -80,7 +65,6 @@ resource "yandex_kubernetes_node_group" "my_node_group" {
     network_interface {
       nat                = true
       subnet_ids         = [yandex_vpc_subnet.subnet_resource_name.id]
-      security_group_ids = [yandex_vpc_security_group.my_sg.id]
     }
 
     resources {
