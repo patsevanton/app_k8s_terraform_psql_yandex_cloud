@@ -1,29 +1,71 @@
+# Service accounts
+
+resource "yandex_iam_service_account" "this" {
+  name = "k8-sa"
+}
+
+resource "yandex_resourcemanager_folder_iam_binding" "editor" {
+  folder_id = var.yc_folder_id
+  role = "editor"
+  members = [
+    "serviceAccount:${yandex_iam_service_account.this.id}"
+  ]
+  depends_on = [
+    yandex_iam_service_account.this,
+  ]
+}
+
+resource "yandex_vpc_network" "this" {
+  name = "this"
+}
+
+resource "yandex_vpc_subnet" "subnet_resource_name" {
+  network_id     = yandex_vpc_network.this.id
+  zone = "ru-central1-c"
+  v4_cidr_blocks = ["192.168.20.0/24"]
+}
+
+resource "yandex_vpc_security_group" "my_sg" {
+  name           = "My security group"
+  description    = "description for my security group"
+  network_id     = yandex_vpc_network.this.id
+
+  depends_on = [
+    yandex_iam_service_account.this,
+    yandex_resourcemanager_folder_iam_binding.editor,
+    yandex_vpc_network.this,
+    yandex_vpc_subnet.subnet_resource_name,
+  ]
+}
+
+
+
 # yandex_kubernetes_cluster
 
 resource "yandex_kubernetes_cluster" "zonal_cluster_resource_name" {
   name        = "my-cluster"
   description = "my-cluster description"
-  network_id = "${yandex_vpc_network.this.id}"
+  network_id = yandex_vpc_network.this.id
 
   master {
     version = "1.18"
     zonal {
-      zone      = "${yandex_vpc_subnet.subnet_resource_name.zone}"
-      subnet_id = "${yandex_vpc_subnet.subnet_resource_name.id}"
+      zone      = yandex_vpc_subnet.subnet_resource_name.zone
+      subnet_id = yandex_vpc_subnet.subnet_resource_name.id
     }
     public_ip = true
   }
 
-  service_account_id      = "${yandex_iam_service_account.this.id}"
-  node_service_account_id = "${yandex_iam_service_account.this.id}"
+  service_account_id      = yandex_iam_service_account.this.id
+  node_service_account_id = yandex_iam_service_account.this.id
   release_channel = "STABLE"
-  depends_on = [yandex_resourcemanager_folder_iam_member.this]
+  depends_on = [yandex_resourcemanager_folder_iam_binding.editor]
 }
 
 # yandex_kubernetes_node_group
 
 resource "yandex_kubernetes_node_group" "my_node_group" {
-  cluster_id  = "${yandex_kubernetes_cluster.zonal_cluster_resource_name.id}"
+  cluster_id  = yandex_kubernetes_cluster.zonal_cluster_resource_name.id
   name        = "name"
   description = "description"
   version     = "1.18"
@@ -37,8 +79,8 @@ resource "yandex_kubernetes_node_group" "my_node_group" {
 
     network_interface {
       nat                = true
-      subnet_ids         = ["${yandex_vpc_subnet.subnet_resource_name.id}"]
-      security_group_ids = ["${yandex_vpc_security_group.my_sg.id}"]
+      subnet_ids         = [yandex_vpc_subnet.subnet_resource_name.id]
+      security_group_ids = [yandex_vpc_security_group.my_sg.id]
     }
 
     resources {
@@ -86,38 +128,7 @@ resource "yandex_kubernetes_node_group" "my_node_group" {
   }
 }
 
-resource "yandex_vpc_security_group" "my_sg" {
-  name           = "My security group"
-  description    = "description for my security group"
-  network_id     = yandex_vpc_network.this.id
 
-  ingress {
-    protocol       = "TCP"
-    description    = "ingress"
-    v4_cidr_blocks = ["0.0.0.0/0"]
-    port           = "6432"
-  }
-
-}
-
-resource "yandex_vpc_network" "this" {}
-
-resource "yandex_vpc_subnet" "subnet_resource_name" {
-  network_id     = yandex_vpc_network.this.id
-  zone = "ru-central1-c"
-  v4_cidr_blocks = ["192.168.20.0/24"]
-}
-
-resource "yandex_iam_service_account" "this" {
-  name = "k8-sa"
-}
-
-resource "yandex_resourcemanager_folder_iam_member" "this" {
-  folder_id = var.yc_folder_id
-
-  member = "serviceAccount:${yandex_iam_service_account.this.id}"
-  role   = "editor"
-}
 
 locals {
   kubeconfig = <<KUBECONFIG
