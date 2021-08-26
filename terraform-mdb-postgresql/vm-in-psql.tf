@@ -14,8 +14,8 @@ resource "yandex_resourcemanager_folder_iam_binding" "editor" {
   ]
 }
 
-resource "yandex_compute_instance_group" "group1" {
-  name               = "test-ig"
+resource "yandex_compute_instance_group" "vm-in-net-psql" {
+  name               = "vm-in-net-psql"
   folder_id          = var.yc_folder_id
   service_account_id = "${yandex_iam_service_account.ig-sa.id}"
 
@@ -27,6 +27,10 @@ resource "yandex_compute_instance_group" "group1" {
   ]
 
   instance_template {
+
+    # Имя виртуальных машин, создаваемых Instance Groups
+    name = "vm-in-net-psql-{instance.index}"
+
     platform_id = "standard-v1"
     resources {
       memory = 2
