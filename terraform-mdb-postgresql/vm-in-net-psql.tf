@@ -77,3 +77,10 @@ resource "yandex_compute_instance_group" "vm-in-net-psql" {
     max_deleting    = 1
   }
 }
+
+# Output values
+
+output "instance_group_vm_in_net_psql_public_ips" {
+  description = "Public IP addresses for vm-in-net-psql"
+  value = yandex_compute_instance_group.vm-in-net-psql.instances.*.network_interface.0.nat_ip_address
+}
