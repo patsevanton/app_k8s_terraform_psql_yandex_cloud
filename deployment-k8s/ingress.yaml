@@ -1,15 +1,15 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: test-ingress
+  name: ingress-flask-postgres
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - http:
+  - host: flask.178.154.208.91.sslip.io
+    http:
       paths:
       - path: /
-        pathType: Prefix
         backend:
           serviceName: flask-postgres
           servicePort: 80
