@@ -46,7 +46,7 @@ resource "yandex_mdb_postgresql_cluster" "postgresql-single" {
 
   host {
     zone      = "ru-central1-c"
-    subnet_id = yandex_vpc_subnet.k8s-mdb-network.id
+    subnet_id = yandex_vpc_subnet.k8s-mdb-subnet.id
   }
 }
 
