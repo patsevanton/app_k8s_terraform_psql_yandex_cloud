@@ -36,4 +36,4 @@ spec:
         - name: DBNAME
           value: db_name
         ports:
-        - containerPort: 5000
+        - containerPort: 80
