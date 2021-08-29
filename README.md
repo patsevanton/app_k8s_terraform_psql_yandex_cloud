@@ -12,13 +12,21 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm r
 helm install nginx-ingress ingress-nginx/ingress-nginx --version 3.36.0  
 ```
 
+
+
+# Get External IP of a Kubernetes service
+```
+export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+```
+
+# Get DBPASS and DBHOST
+```
+export DBHOST=$(terraform output dbhosts)
+export DBPASS=$(terraform output dbpassword)
+```
+
 # Install flask-postgres
 ```
 URL=flask-postgres.$IP.sslip.io
 helm install --set DBPASS=$DBPASS,DBHOST=$DBHOST,ingress.enabled=true,ingress.hosts[0].host=$URL,ingress.hosts[0].paths[0].path=/ flask-postgres ./flask-postgres
-```
-
-# Get External IP of a Kubernetes service
-```
-kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
