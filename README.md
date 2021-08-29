@@ -21,8 +21,8 @@ export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output
 
 # Get DBPASS and DBHOST
 ```
-export DBHOST=$(terraform output dbhosts)
-export DBPASS=$(terraform output dbpassword)
+export DBHOST=$(terraform output dbhosts | sed -e 's/^"//' -e 's/"$//')
+export DBPASS=$(terraform output dbpassword | sed -e 's/^"//' -e 's/"$//')
 ```
 
 # Install flask-postgres
