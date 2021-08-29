@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-postgres
+spec:
+  selector:
+    app: flask-postgres
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000

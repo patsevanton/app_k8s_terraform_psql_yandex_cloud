@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-postgres
+  labels:
+    app: flask-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-postgres
+  template:
+    metadata:
+      labels:
+        app: flask-postgres
+    spec:
+      containers:
+      - name: flask-postgres
+        image: cmelgreen/docker-flask-postgres
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+          requests:
+            memory: 256Mi
+            cpu: "1"
+        env:
+        - name: DBPASS
+          value: your_password
+        - name: DBHOST
+          value: rc1c-0h7bdpqb6zeq7qon.mdb.yandexcloud.net
+        - name: DBUSER
+          value: user_name
+        - name: DBPORT
+          value: '6432'
+        - name: DBNAME
+          value: db_name
+        ports:
+        - containerPort: 5000
