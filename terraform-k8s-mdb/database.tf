@@ -1,7 +1,7 @@
 resource "yandex_mdb_postgresql_cluster" "postgresql-single" {
   name        = "test"
   environment = "PRESTABLE"
-  network_id  = yandex_vpc_network.vpc-psql.id
+  network_id  = yandex_vpc_network.k8s-mdb.id
 
   config {
     version = 12
@@ -46,7 +46,7 @@ resource "yandex_mdb_postgresql_cluster" "postgresql-single" {
 
   host {
     zone      = "ru-central1-c"
-    subnet_id = yandex_vpc_subnet.subnet-psql.id
+    subnet_id = yandex_vpc_subnet.k8s-mdb.id
   }
 }
 

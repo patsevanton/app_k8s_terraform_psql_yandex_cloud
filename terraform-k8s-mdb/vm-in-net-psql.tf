@@ -6,8 +6,8 @@ resource "yandex_compute_instance_group" "vm-in-net-psql" {
   depends_on = [
     yandex_iam_service_account.this,
     yandex_resourcemanager_folder_iam_binding.editor,
-    yandex_vpc_network.vpc-psql,
-    yandex_vpc_subnet.subnet-psql,
+    yandex_vpc_network.k8s-mdb,
+    yandex_vpc_subnet.k8s-mdb,
   ]
 
   instance_template {
@@ -30,8 +30,8 @@ resource "yandex_compute_instance_group" "vm-in-net-psql" {
     }
 
     network_interface {
-      network_id = yandex_vpc_network.vpc-psql.id
-      subnet_ids = [yandex_vpc_subnet.subnet-psql.id]
+      network_id = yandex_vpc_network.k8s-mdb.id
+      subnet_ids = [yandex_vpc_subnet.k8s-mdb.id]
       # Флаг nat true указывает что виртуалкам будет предоставлен публичный IP адрес.
       nat = true
     }
