@@ -1,26 +1,10 @@
-resource "yandex_iam_service_account" "ig-sa" {
-  name        = "ig-sa"
-  description = "service account to manage IG"
-}
-
-resource "yandex_resourcemanager_folder_iam_binding" "editor" {
-  folder_id   = var.yc_folder_id
-  role        = "editor"
-  members     = [
-    "serviceAccount:${yandex_iam_service_account.ig-sa.id}",
-  ]
-  depends_on = [
-    yandex_iam_service_account.ig-sa,
-  ]
-}
-
 resource "yandex_compute_instance_group" "vm-in-net-psql" {
   name               = "vm-in-net-psql"
   folder_id          = var.yc_folder_id
-  service_account_id = yandex_iam_service_account.ig-sa.id
+  service_account_id = yandex_iam_service_account.this.id
 
   depends_on = [
-    yandex_iam_service_account.ig-sa,
+    yandex_iam_service_account.this,
     yandex_resourcemanager_folder_iam_binding.editor,
     yandex_vpc_network.vpc-psql,
     yandex_vpc_subnet.subnet-psql,
