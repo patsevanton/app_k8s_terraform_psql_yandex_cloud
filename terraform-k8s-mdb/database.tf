@@ -59,23 +59,23 @@ locals {
 }
 
 output "dbuser" {
-  value = "${local.dbuser}"
+  value = local.dbuser
 }
 
 output "dbpassword" {
-  value = "${local.dbpassword}"
+  value = local.dbpassword
   sensitive = true
 }
 
 output "dbhosts" {
-  value = "${local.dbhosts}"
+  value = local.dbhosts
 }
 
 output "dbname" {
-  value = "${local.dbname}"
+  value = local.dbname
 }
 
 output "dburi" {
-  value = "${local.dburi}"
+  value = local.dburi
   sensitive = true
 }
