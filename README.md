@@ -5,3 +5,9 @@
 ```
 kubectl run pgsql-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.7.0-debian-10-r9 --env="PGPASSWORD=your_password" --command -- psql  --host rc1c-0h7bdpqb6zeq7qon.mdb.yandexcloud.net -U user_name -d db_name -p 6432
 ```
+
+# Create ingress
+```
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update
+helm install nginx-ingress ingress-nginx/ingress-nginx --version 3.36.0  
+```
