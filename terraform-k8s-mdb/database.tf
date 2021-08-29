@@ -68,7 +68,7 @@ output "dbpassword" {
 }
 
 output "dbhosts" {
-  value = local.dbhosts
+  value = local.dbhosts[0]
 }
 
 output "dbname" {
