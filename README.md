@@ -13,12 +13,6 @@
 - kubectl
 - helm
 
-## Установка Yandex.Cloud (CLI) 
-Интерфейс командной строки Yandex.Cloud (CLI) — скачиваемое программное обеспечение для управления вашими облачными ресурсами через командную строку.
-```
-$ curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-```
-
 ## Получение приватных токенов Yandex.Cloud
 ```
 yc init
