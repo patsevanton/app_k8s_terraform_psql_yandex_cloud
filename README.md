@@ -33,7 +33,7 @@ cd ..
 
 ## Создаем .kube/config
 ```
-mkdir .kube
+mkdir -p .kube
 ```
 
 # Создаем ingress
