@@ -19,7 +19,8 @@ done
 if yc config list | grep -q 'token'; then
   echo "yc configured"
 else
-  echo "yc doesn't configured. Exit"
+  echo "yc doesn't configured."
+  echo "Please run 'yc init'"
   exit 1
 fi
 
