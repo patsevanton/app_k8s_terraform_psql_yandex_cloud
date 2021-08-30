@@ -18,7 +18,7 @@ helm install nginx-ingress ingress-nginx/ingress-nginx --version 3.36.0
 export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
-# Создание переменных DBPASS and DBHOST из terraform output
+# Создание переменных DBPASS and DBHOST из terraform output. Делаем в директории terraform-k8s-mdb
 ```
 export DBHOST=$(terraform output dbhosts | sed -e 's/^"//' -e 's/"$//')
 export DBPASS=$(terraform output dbpassword | sed -e 's/^"//' -e 's/"$//')
