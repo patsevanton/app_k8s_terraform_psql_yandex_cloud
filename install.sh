@@ -31,6 +31,7 @@ sed '/compute-default-zone/d' -i private.auto.tfvars
 sed 's/ //g' -i private.auto.tfvars
 sed 's/$/"/' -i private.auto.tfvars
 sed 's/=/="/g' -i private.auto.tfvars
+terraform init
 terraform apply -auto-approve
 mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
