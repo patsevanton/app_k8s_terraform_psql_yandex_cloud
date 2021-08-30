@@ -25,6 +25,14 @@ else
 fi
 
 cd terraform-k8s-mdb
+
+FILE=private.auto.tfvars
+if [ -f "$FILE" ]; then
+    echo "$FILE exists."
+else 
+    echo "$FILE does not exist."
+fi
+
 terraform apply
 mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
