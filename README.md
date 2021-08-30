@@ -24,16 +24,13 @@ yc init
 cd terraform-k8s-mdb
 ```
 
-## Создаем файл private.auto.tfvars.
+## Создаем файл private.auto.tfvars и создаем .kube/config
 В файле записываем ваши `yc_token`, `yc_cloud_id`, `yc_folder_id` полученые из `yc init`
 ```
 terraform apply
+mkdir -p /home/$USER/.kube
+terraform output > /home/$USER/.kube/config
 cd ..
-```
-
-## Создаем .kube/config
-```
-mkdir -p .kube
 ```
 
 # Создаем ingress
