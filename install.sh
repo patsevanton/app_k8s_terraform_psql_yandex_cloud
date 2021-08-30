@@ -34,6 +34,9 @@ else
     exit 1
 fi
 
+yc config list > private.auto.tfvars
+sed -i 's/:/=/g' private.auto.tfvars
+sed '/compute-default-zone/d' -i private.auto.tfvars
 terraform apply -auto-approve
 mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
