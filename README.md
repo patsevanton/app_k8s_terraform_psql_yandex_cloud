@@ -6,6 +6,37 @@
 
 ![](https://habrastorage.org/webt/zf/l9/7r/zfl97rfszbckd9tipns_5zjfgca.png)
 
+## Необходимо чтобы были установлены следующие программы
+Можно установить все перечислинные утилиты с помощью утилиты [binenv](https://github.com/devops-works/binenv), кроме Yandex.Cloud (CLI) 
+- [yc](https://cloud.yandex.ru/docs/cli/operations/install-cli)
+- terraform
+- kubectl
+- helm
+
+## Установка Yandex.Cloud (CLI) 
+Интерфейс командной строки Yandex.Cloud (CLI) — скачиваемое программное обеспечение для управления вашими облачными ресурсами через командную строку.
+```
+$ curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+```
+
+## Получение приватных токенов Yandex.Cloud
+```
+yc init
+```
+
+# Установка Managed Service for PostgreSQL и Managed Service for Kubernetes в Yandex Cloud c помощью terraform
+Переходим в директорию terraform-k8s-mdb
+```
+cd terraform-k8s-mdb
+```
+
+## Создаем файл private.auto.tfvars.
+В файле записываем ваши yc_token, yc_cloud_id, yc_folder_id
+```
+terraform apply
+cd ..
+```
+
 # Создаем ingress
 ```
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update
@@ -20,8 +51,10 @@ export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output
 
 # Создание переменных DBPASS and DBHOST из terraform output. Делаем в директории terraform-k8s-mdb
 ```
+cd terraform-k8s-mdb
 export DBHOST=$(terraform output dbhosts | sed -e 's/^"//' -e 's/"$//')
 export DBPASS=$(terraform output dbpassword | sed -e 's/^"//' -e 's/"$//')
+cd ..
 ```
 
 # Установка flask-postgres используя helm
