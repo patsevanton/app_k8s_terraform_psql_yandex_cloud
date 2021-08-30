@@ -3,7 +3,7 @@
 
 Диаграмма сервисов
 
-![](https://habrastorage.org/webt/7n/lv/pq/7nlvpq3fhuv30zifhn6rwuj5jpw.png)
+![](https://habrastorage.org/webt/zf/l9/7r/zfl97rfszbckd9tipns_5zjfgca.png)
 
 # Create ingress
 ```
