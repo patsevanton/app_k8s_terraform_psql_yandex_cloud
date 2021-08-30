@@ -29,3 +29,7 @@ terraform apply
 mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
 cd ..
+
+# Create ingress
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update
+helm install nginx-ingress ingress-nginx/ingress-nginx --version 3.36.0  
