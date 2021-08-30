@@ -30,7 +30,7 @@ cd terraform-k8s-mdb
 terraform apply
 mkdir -p /home/$USER/.kube
 terraform output > /home/$USER/.kube/config
-cd ..
+
 ```
 
 # Создаем ingress
@@ -47,7 +47,6 @@ export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output
 
 # Создание переменных DBPASS and DBHOST из terraform output. Делаем в директории terraform-k8s-mdb
 ```
-cd terraform-k8s-mdb
 export DBHOST=$(terraform output dbhosts | sed -e 's/^"//' -e 's/"$//')
 export DBPASS=$(terraform output dbpassword | sed -e 's/^"//' -e 's/"$//')
 cd ..
