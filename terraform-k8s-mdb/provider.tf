@@ -1,16 +1,16 @@
 # Variables
 
-variable "yc_token" {
+variable "token" {
   type = string
   description = "Yandex Cloud API key"
 }
 
-variable "yc_cloud_id" {
+variable "cloud-id" {
   type = string
   description = "Yandex Cloud id"
 }
 
-variable "yc_folder_id" {
+variable "folder-id" {
   type = string
   description = "Yandex Cloud folder id"
 }
@@ -27,7 +27,7 @@ terraform {
 }
 
 provider "yandex" {
-  token     = var.yc_token
-  cloud_id  = var.yc_cloud_id
-  folder_id = var.yc_folder_id
+  token     = var.token
+  cloud_id  = var.cloud-id
+  folder_id = var.folder-id
 }
