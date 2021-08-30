@@ -16,6 +16,13 @@ do
     fi
 done
 
+if yc config list | grep -q 'token'; then
+  echo "yc configured"
+else
+  echo "yc doesn't configured. Exit"
+  exit 1
+fi
+
 cd terraform-k8s-mdb
 terraform apply
 mkdir -p /home/$USER/.kube
