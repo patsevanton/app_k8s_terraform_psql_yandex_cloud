@@ -12,7 +12,7 @@ do
     if ! command -v $i &> /dev/null
     then
         echo "$i could not be found"
-        exit
+        exit 1
     fi
 done
 
@@ -31,6 +31,7 @@ if [ -f "$FILE" ]; then
     echo "$FILE exists."
 else 
     echo "$FILE does not exist."
+    exit 1
 fi
 
 terraform apply
