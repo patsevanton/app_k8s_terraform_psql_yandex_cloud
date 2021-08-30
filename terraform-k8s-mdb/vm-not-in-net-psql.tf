@@ -4,7 +4,7 @@ resource "yandex_iam_service_account" "single-vm" {
 }
 
 resource "yandex_resourcemanager_folder_iam_binding" "single-vm" {
-  folder_id   = var.yc_folder_id
+  folder_id   = var.folder-id
   role        = "editor"
   members     = [
     "serviceAccount:${yandex_iam_service_account.single-vm.id}",
@@ -16,7 +16,7 @@ resource "yandex_resourcemanager_folder_iam_binding" "single-vm" {
 
 resource "yandex_compute_instance_group" "vm-not-in-net-psql" {
   name               = "vm-not-in-net-psql"
-  folder_id          = var.yc_folder_id
+  folder_id          = var.folder-id
   service_account_id = yandex_iam_service_account.single-vm.id
 
   depends_on = [

@@ -1,6 +1,6 @@
 resource "yandex_compute_instance_group" "vm-in-net-psql" {
   name               = "vm-in-net-psql"
-  folder_id          = var.yc_folder_id
+  folder_id          = var.folder-id
   service_account_id = yandex_iam_service_account.this.id
 
   depends_on = [
