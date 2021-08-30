@@ -25,15 +25,6 @@ else
 fi
 
 cd terraform-k8s-mdb
-
-FILE=private.auto.tfvars
-if [ -f "$FILE" ]; then
-    echo "$FILE exists."
-else 
-    echo "$FILE does not exist."
-    exit 1
-fi
-
 yc config list > private.auto.tfvars
 sed -i 's/:/=/g' private.auto.tfvars
 sed '/compute-default-zone/d' -i private.auto.tfvars
