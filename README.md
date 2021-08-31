@@ -18,6 +18,13 @@
 yc init
 ```
 
+# Установка всего стенда с помощью скрипта install.sh
+Для изменения конфигурации инфстраструктуры необходимо править файлы .tf
+Запускаем скрипт install.sh
+```
+./install.sh
+```
+
 # Установка Managed Service for PostgreSQL и Managed Service for Kubernetes в Yandex Cloud c помощью terraform
 Переходим в директорию terraform-k8s-mdb
 ```
