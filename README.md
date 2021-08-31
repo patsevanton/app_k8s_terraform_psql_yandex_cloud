@@ -25,7 +25,9 @@ yc init
 ./install.sh
 ```
 
-# Установка Managed Service for PostgreSQL и Managed Service for Kubernetes в Yandex Cloud c помощью terraform
+# Рассмотрим что делает скрипт install.sh
+
+## Установка Managed Service for PostgreSQL и Managed Service for Kubernetes в Yandex Cloud c помощью terraform
 Переходим в директорию terraform-k8s-mdb
 ```
 cd terraform-k8s-mdb
@@ -40,33 +42,33 @@ terraform output > /home/$USER/.kube/config
 
 ```
 
-# Создаем ingress
+## Создаем ingress
 ```
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update
 helm install nginx-ingress ingress-nginx/ingress-nginx --version 3.36.0  
 ```
 Устанавливаем версию 3.36.0, так как последняя версия поддерживает только Kubernetes версии >= v1.19
 
-# Получение External IP (внешнего IP) Kubernetes сервиса nginx-ingress-ingress-nginx-controller
+### Получение External IP (внешнего IP) Kubernetes сервиса nginx-ingress-ingress-nginx-controller
 ```
 export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
-# Создание переменных DBPASS and DBHOST из terraform output. Делаем в директории terraform-k8s-mdb
+## Создание переменных DBPASS and DBHOST из terraform output. Делаем в директории terraform-k8s-mdb
 ```
 export DBHOST=$(terraform output dbhosts | sed -e 's/^"//' -e 's/"$//')
 export DBPASS=$(terraform output dbpassword | sed -e 's/^"//' -e 's/"$//')
 cd ..
 ```
 
-# Установка flask-postgres используя helm
+## Установка flask-postgres используя helm
 ```
 URL=flask-postgres.$IP.sslip.io
 helm install --set DBPASS=$DBPASS,DBHOST=$DBHOST,ingress.enabled=true,ingress.hosts[0].host=$URL,ingress.hosts[0].paths[0].path=/ flask-postgres ./flask-postgres
 ```
 
 
-# Проверка подключения из kubernetes в PostgreSQL
+## Проверка подключения из kubernetes в PostgreSQL
 ```
 kubectl run pgsql-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.7.0-debian-10-r9 --env="PGPASSWORD=$DBPASS" --command -- psql  --host $DBHOST -U user_name -d db_name -p 6432
 ```
