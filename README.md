@@ -19,18 +19,68 @@ yc init
 ```
 
 # Установка всего стенда с помощью скрипта install.sh
-Для изменения конфигурации инфстраструктуры необходимо править файлы .tf
-Запускаем скрипт install.sh
+Для изменения конфигурации инфстраструктуры необходимо править файлы .tf. Запускаем скрипт install.sh
 ```
 ./install.sh
 ```
 
-# Рассмотрим что делает скрипт install.sh
+# Рассмотрим что делает скрипт install.sh. Прохождение всех этапов скрипта вручную
+
+`set -o errexit` означает, что если какая-либо из команд в вашем коде не работает по какой-либо причине, весь скрипт терпит неудачу.
+`set -o pipefail` скрипт завершится неудачно, если одна из ваших команд конвейера не удалась, в противном случае вы можете получить неправильные коды выхода, когда вы используете код конвейера.
+`set -o nounset` скрипт завершится неудачно, если какая-либо из ваших переменных не установлена
+
+# Проверка доступности команд yc terraform kubectl helm
+```
+list_command_available=(yc terraform kubectl helm)
+
+for i in ${list_command_available[*]}
+do
+    if ! command -v $i &> /dev/null
+    then
+        echo "$i could not be found"
+        exit 1
+    fi
+done
+```
+
+# Проверка что Yandex.Cloud (CLI) сконфигурирован
+```
+if yc config list | grep -q 'token'; then
+  echo "yc configured. Passed"
+else
+  echo "yc doesn't configured."
+  echo "Please run 'yc init'"
+  exit 1
+fi
+```
 
 ## Установка Managed Service for PostgreSQL и Managed Service for Kubernetes в Yandex Cloud c помощью terraform
 Переходим в директорию terraform-k8s-mdb
 ```
 cd terraform-k8s-mdb
+```
+# Экспорт токенов из Yandex.Cloud (CLI) в private.auto.tfvars
+```
+yc config list > private.auto.tfvars
+sed 's/:/=/g' -i private.auto.tfvars
+sed '/compute-default-zone/d' -i private.auto.tfvars
+sed 's/ //g' -i private.auto.tfvars
+sed 's/$/"/' -i private.auto.tfvars
+sed 's/=/="/g' -i private.auto.tfvars
+```
+
+# Инициализация и применение конфигурации terraform
+```
+terraform init
+terraform apply -auto-approve
+```
+
+# Формирование kubernetes конфига из вывода terraform output kubeconfig
+```
+mkdir -p /home/$USER/.kube
+terraform output kubeconfig > /home/$USER/.kube/config
+sed '/EOT/d' -i /home/$USER/.kube/config
 ```
 
 ## Создаем файл private.auto.tfvars и создаем .kube/config
