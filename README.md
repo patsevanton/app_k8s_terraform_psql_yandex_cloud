@@ -7,15 +7,21 @@
 ![](https://habrastorage.org/webt/zf/l9/7r/zfl97rfszbckd9tipns_5zjfgca.png)
 
 ## Необходимо чтобы были установлены следующие программы
-Можно установить все перечислинные утилиты с помощью утилиты [binenv](https://github.com/devops-works/binenv), кроме Yandex.Cloud (CLI) 
+Можно установить все перечислинные утилиты с помощью утилиты [binenv](https://github.com/devops-works/binenv), кроме Yandex.Cloud (CLI) и git.
 - [yc](https://cloud.yandex.ru/docs/cli/operations/install-cli)
 - terraform
 - kubectl
 - helm
+- git
 
 ## Необходимо инициализировать Yandex.Cloud и получить приватные токены
 ```
 yc init
+```
+
+# Клонируем репо
+```
+git clone https://github.com/patsevanton/app_k8s_terraform_psql_yandex_cloud.git
 ```
 
 # Установка всего стенда с помощью скрипта install.sh
