@@ -151,7 +151,11 @@ URL=flask-postgres.$IP.sslip.io
 helm install --set DBPASS=$DBPASS,DBHOST=$DBHOST,ingress.enabled=true,ingress.hosts[0].host=$URL,ingress.hosts[0].paths[0].path=/ flask-postgres ./flask-postgres
 ```
 
-## Проверка подключения из kubernetes в PostgreSQL (Вручную)
+## Проверка подключения из kubernetes в PostgreSQL (Вручную. После выполнения скрипта install.sh)
 ```
+cd terraform-k8s-mdb
+export DBHOST=$(terraform output dbhosts | sed -e 's/^"//' -e 's/"$//')
+export DBPASS=$(terraform output dbpassword | sed -e 's/^"//' -e 's/"$//')
+cd ..
 kubectl run pgsql-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.7.0-debian-10-r9 --env="PGPASSWORD=$DBPASS" --command -- psql  --host $DBHOST -U user_name -d db_name -p 6432
 ```
