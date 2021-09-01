@@ -37,7 +37,7 @@ resource "yandex_compute_instance_group" "vm-in-net-psql" {
     }
 
     metadata = {
-      ssh-keys = "ubuntu:${file("~/.ssh/id_rsa_epam.pub")}"
+      ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
     }
     network_settings {
       type = "STANDARD"
