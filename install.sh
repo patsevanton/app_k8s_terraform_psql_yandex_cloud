@@ -36,7 +36,6 @@ terraform apply -auto-approve
 mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
 sed '/EOT/d' -i /home/$USER/.kube/config
-cd ..
 
 # Создаем  ingress
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update
@@ -48,6 +47,9 @@ export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output
 # Создание переменных DBPASS and DBHOST из terraform output. 
 export DBHOST=$(terraform output dbhosts | sed -e 's/^"//' -e 's/"$//')
 export DBPASS=$(terraform output dbpassword | sed -e 's/^"//' -e 's/"$//')
+
+# Change directory
+cd ..
 
 # Установка flask-postgres используя helm
 export URL=flask-postgres.$IP.sslip.io
