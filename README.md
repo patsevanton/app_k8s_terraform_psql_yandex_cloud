@@ -165,3 +165,12 @@ export DBPASS=$(terraform output dbpassword | sed -e 's/^"//' -e 's/"$//')
 cd ..
 kubectl run pgsql-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.7.0-debian-10-r9 --env="PGPASSWORD=$DBPASS" --command -- psql  --host $DBHOST -U user_name -d db_name -p 6432
 ```
+
+Заходим в приложение flask-postgres по адресу, который был указан в консоли.
+
+![](https://habrastorage.org/webt/vh/y4/pt/vhy4ptdn5lismhu85lhlfkgumdi.png)
+
+Вводим тестовые данные
+![](https://habrastorage.org/webt/jh/yu/ov/jhyuovzf5w8vth250-e6bn_1zgq.png)
+
+Данные успешно добавились. Значит приложение работает и подключение к PostgreSQL тоже работает.
