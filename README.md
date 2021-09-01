@@ -90,8 +90,40 @@ sed '/EOT/d' -i /home/$USER/.kube/config
 ```
 terraform apply
 mkdir -p /home/$USER/.kube
-terraform output > /home/$USER/.kube/config
+terraform output kubeconfig > /home/$USER/.kube/config
+```
 
+Kubernetes config внутри terraform создается с помощью вот такого кода:
+```
+locals {
+  kubeconfig = <<KUBECONFIG
+apiVersion: v1
+clusters:
+- cluster:
+    server: ${yandex_kubernetes_cluster.zonal_k8s_cluster.master[0].external_v4_endpoint}
+    certificate-authority-data: ${base64encode(yandex_kubernetes_cluster.zonal_k8s_cluster.master[0].cluster_ca_certificate)}
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: yc
+  name: ycmk8s
+current-context: ycmk8s
+users:
+- name: yc
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      command: yc
+      args:
+      - k8s
+      - create-token
+KUBECONFIG
+}
+
+output "kubeconfig" {
+  value = "${local.kubeconfig}"
+}
 ```
 
 ## Создаем ingress
@@ -119,8 +151,7 @@ URL=flask-postgres.$IP.sslip.io
 helm install --set DBPASS=$DBPASS,DBHOST=$DBHOST,ingress.enabled=true,ingress.hosts[0].host=$URL,ingress.hosts[0].paths[0].path=/ flask-postgres ./flask-postgres
 ```
 
-
-## Проверка подключения из kubernetes в PostgreSQL
+## Проверка подключения из kubernetes в PostgreSQL (Вручную)
 ```
 kubectl run pgsql-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.7.0-debian-10-r9 --env="PGPASSWORD=$DBPASS" --command -- psql  --host $DBHOST -U user_name -d db_name -p 6432
 ```
