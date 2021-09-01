@@ -2,6 +2,10 @@
 
 В этом посте будет описана установка [Managed Service for PostgreSQL](https://cloud.yandex.ru/services/managed-postgresql) и [Managed Service for Kubernetes](https://cloud.yandex.ru/services/managed-kubernetes) в [Yandex Cloud](https://cloud.yandex.ru/) c помощью [terraform](https://www.terraform.io/). В [Kubernetes](https://kubernetes.io/ru/) будет установлено простое приложение на [flask](https://flask.palletsprojects.com/en/2.0.x/), которая записывает данные в Managed Service for PostgreSQL. Приложение на flask описано в [helm](https://helm.sh/) чарте и будет установлено с помощью helm. Внешний трафик из интернета будет проходить сначала [Network load balancer](https://cloud.yandex.ru/services/network-load-balancer), затем попадать в [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/). Ingress – это ресурс для добавления правил маршрутизации трафика из внешних источников в службы в кластере kubernetes.
 
+Всю установка и настройка добавлена в скрипт install.sh. Можно просто запустить скрипт и все установиться. В посте описывается более подробно.
+
+<cut />
+
 Диаграмма сервисов
 
 ![](https://habrastorage.org/webt/zf/l9/7r/zfl97rfszbckd9tipns_5zjfgca.png)
