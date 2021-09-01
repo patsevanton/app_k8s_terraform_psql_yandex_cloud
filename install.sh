@@ -36,6 +36,7 @@ terraform apply -auto-approve
 mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
 sed '/EOT/d' -i /home/$USER/.kube/config
+cd ..
 
 # Создаем  ingress
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update
