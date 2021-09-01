@@ -50,8 +50,7 @@ cd ..
 
 # Получение External IP (внешнего IP) Kubernetes сервиса nginx-ingress-ingress-nginx-controller
 export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
-echo $IP
 
 # Установка flask-postgres используя helm
 export URL=flask-postgres.$IP.sslip.io
-helm install --set DBPASS=$DBPASS,DBHOST=$DBHOST,ingress.enabled=true,ingress.hosts[0].host=$URL,ingress.hosts[0].paths[0].path=/ flask-postgres ./flask-postgres
+helm install --atomic --set DBPASS=$DBPASS,DBHOST=$DBHOST,ingress.enabled=true,ingress.hosts[0].host=$URL,ingress.hosts[0].paths[0].path=/ flask-postgres ./flask-postgres
