@@ -95,14 +95,6 @@ terraform output kubeconfig > /home/$USER/.kube/config
 sed '/EOT/d' -i /home/$USER/.kube/config
 ```
 
-## Создаем файл private.auto.tfvars и создаем .kube/config
-В файле записываем ваши `token`, `cloud-id`, `folder-id` полученые из `yc init`
-```
-terraform apply
-mkdir -p /home/$USER/.kube
-terraform output kubeconfig > /home/$USER/.kube/config
-```
-
 Kubernetes config внутри terraform создается с помощью вот такого кода:
 ```
 locals {
@@ -143,11 +135,6 @@ helm install nginx-ingress ingress-nginx/ingress-nginx --version 3.36.0
 ```
 Устанавливаем версию 3.36.0, так как последняя версия поддерживает только Kubernetes версии >= v1.19
 
-### Получение External IP (внешнего IP) Kubernetes сервиса nginx-ingress-ingress-nginx-controller
-```
-export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
-```
-
 ## Создание переменных DBPASS and DBHOST из terraform output. Делаем в директории terraform-k8s-mdb
 ```
 export DBHOST=$(terraform output dbhosts | sed -e 's/^"//' -e 's/"$//')
@@ -155,10 +142,15 @@ export DBPASS=$(terraform output dbpassword | sed -e 's/^"//' -e 's/"$//')
 cd ..
 ```
 
+### Получение External IP (внешнего IP) Kubernetes сервиса nginx-ingress-ingress-nginx-controller
+```
+export IP=$(kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+```
+
 ## Установка flask-postgres используя helm
 ```
 URL=flask-postgres.$IP.sslip.io
-helm install --set DBPASS=$DBPASS,DBHOST=$DBHOST,ingress.enabled=true,ingress.hosts[0].host=$URL,ingress.hosts[0].paths[0].path=/ flask-postgres ./flask-postgres
+helm install --atomic --set DBPASS=$DBPASS,DBHOST=$DBHOST,ingress.enabled=true,ingress.hosts[0].host=$URL,ingress.hosts[0].paths[0].path=/ flask-postgres ./flask-postgres
 ```
 
 ## Проверка подключения из kubernetes в PostgreSQL (Вручную. После выполнения скрипта install.sh)
