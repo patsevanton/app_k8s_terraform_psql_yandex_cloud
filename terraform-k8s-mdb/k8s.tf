@@ -53,6 +53,11 @@ resource "yandex_kubernetes_node_group" "k8s_node_group" {
     scheduling_policy {
       preemptible = false
     }
+    
+    metadata = {
+      ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+    }
+    
   }
 
   scale_policy {
