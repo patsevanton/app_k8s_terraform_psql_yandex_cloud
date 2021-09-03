@@ -1,8 +1,8 @@
-# Установка и использование Managed Service for PostgreSQL и Managed Service for Kubernetes в Yandex Cloud c помощью terraform
+# Установка, использование Managed Service for PostgreSQL,Managed Service for Kubernetes в YandexCloud c помощью terraform
 
 В этом посте будет описана установка [Managed Service for PostgreSQL](https://cloud.yandex.ru/services/managed-postgresql) и [Managed Service for Kubernetes](https://cloud.yandex.ru/services/managed-kubernetes) в [Yandex Cloud](https://cloud.yandex.ru/) c помощью [terraform](https://www.terraform.io/). В [Kubernetes](https://kubernetes.io/ru/) будет установлено простое приложение на [flask](https://flask.palletsprojects.com/en/2.0.x/), которая записывает данные в Managed Service for PostgreSQL. Приложение на flask описано в [helm](https://helm.sh/) чарте и будет установлено с помощью helm. Внешний трафик из интернета будет проходить сначала [Network load balancer](https://cloud.yandex.ru/services/network-load-balancer), затем попадать в [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/). Ingress – это ресурс для добавления правил маршрутизации трафика из внешних источников в службы в кластере kubernetes.
 
-Всю установка и настройка добавлена в скрипт install.sh. Можно просто запустить скрипт и все установиться. В посте описывается более подробно.
+Вся установка и настройка добавлена в скрипт install.sh. Можно просто запустить скрипт и все установится. В посте описывается более подробно.
 
 <cut />
 
@@ -73,13 +73,47 @@ fi
 cd terraform-k8s-mdb
 ```
 # Экспорт токенов из Yandex.Cloud (CLI) в private.auto.tfvars
+
+Вывод `yc config list` имеет вот такой вид
+```
+token: xxx
+cloud-id: yyy
+folder-id: zzz
+compute-default-zone: ru-central1-c
+```
+
+Переменные в terraform назначаются через равно и строки надо экранировать двойными кавычками. Поэтому нам нужно из вывода `yc config list` сделать корректный файл private.auto.tfvars.
+
+Сохраняем вывод yc config list  в файл private.auto.tfvars
 ```
 yc config list > private.auto.tfvars
+```
+Меняем двоеточие на знак равно:
+```
 sed 's/:/=/g' -i private.auto.tfvars
+```
+Удаляем строку содержащую 'compute-default-zone', так как она нам не нужна:
+```
 sed '/compute-default-zone/d' -i private.auto.tfvars
+```
+Удаляем пробелы:
+```
 sed 's/ //g' -i private.auto.tfvars
+```
+Добавляем в конец строки двойные кавычки:
+```
 sed 's/$/"/' -i private.auto.tfvars
+```
+Добавляем после знака равно двойные кавычки:
+```
 sed 's/=/="/g' -i private.auto.tfvars
+```
+
+Получается вот такой файл private.auto.tfvars
+```
+token="xxx"
+cloud-id="yyy"
+folder-id="zzz"
 ```
 
 # Инициализация и применение конфигурации terraform
