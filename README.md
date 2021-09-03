@@ -201,6 +201,7 @@ kubectl run pgsql-postgresql-client --rm --tty -i --restart='Never' --namespace 
 ![](https://habrastorage.org/webt/vh/y4/pt/vhy4ptdn5lismhu85lhlfkgumdi.png)
 
 Вводим тестовые данные
+
 ![](https://habrastorage.org/webt/jh/yu/ov/jhyuovzf5w8vth250-e6bn_1zgq.png)
 
 Данные успешно добавились. Значит приложение работает и подключение к PostgreSQL тоже работает.
